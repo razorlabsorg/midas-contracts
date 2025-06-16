@@ -15,4 +15,8 @@ serde_json = { version = "1.0", features = ["raw_value"] }
 tokio = { version = "1.40", features = ["rt-multi-thread", "net", "macros"] }
 rand_chacha = "0.9.0"
 miden-client-tools = "0.2.0"
+miden-vm = "0.9.0"
+
+[dev-dependencies]
+tokio = { version = "1.40", features = ["rt-multi-thread", "macros"] }
 

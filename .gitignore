@@ -3,3 +3,5 @@ store.sqlite3
 keystore
 docs
 .sol
+asm
+generated
