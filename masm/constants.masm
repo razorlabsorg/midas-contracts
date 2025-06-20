@@ -1,0 +1,18 @@
+const.MAX_POSITIVE_INT=9223372034707292160
+const.MAX_VAL=18446744069414584320
+const.TICK=887272
+
+proc.to_negative
+    push.MAX_VAL
+    swap
+    sub
+end
+
+export.get_min_tick
+    push.TICK
+    exec.to_negative
+end
+
+export.get_max_tick
+    push.TICK
+end

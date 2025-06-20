@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+assembly = { package = "miden-assembly", version = "0.14.0", default-features = false }
+vm-core = { package = "miden-core", version = "0.14.0", default-features = false }
+processor = { package = "miden-processor", version = "0.14.0", default-features = false, features = [ "testing" ] }
+miden-stdlib = "0.14.0"
+test-utils = { package = "miden-test-utils", version = "0.1.0" }
+masm-parser = "0.1.0"
