@@ -1,3 +1,5 @@
+use.std::sys
+
 const.MAX_POSITIVE_INT=9223372034707292160
 const.MAX_VAL=18446744069414584320
 const.TICK=887272
@@ -8,11 +10,74 @@ proc.to_negative
     sub
 end
 
-export.get_min_tick
+proc.get_min_tick
     push.TICK
     exec.to_negative
 end
 
-export.get_max_tick
+proc.get_max_tick
     push.TICK
 end
+
+
+proc.overflowing_mul
+    # Input: [d, c, b, a]
+    # Multiply a * b * c * d and reduce to u128
+
+    # Step 1: t1 = a * b
+    mul                    # [ab]
+    push.4294967296
+    swap.1
+
+
+
+    # Step 2: t2 = ab_lo * c
+    #swap.2                    # [c, ab_lo, ab_hi, d]
+    #mul                    # [lo_hi, lo_lo, ab_hi, d]
+
+    # Step 3: t3 = ab_hi * c
+    #swap.1                    # [ab_hi, lo_lo, lo_hi, d]
+    #mul                    # [hi_hi, hi_lo, lo_lo, lo_hi, d]
+
+    # Now intermediate 96-bit result = [hi_hi, hi_lo, lo_hi, lo_lo]
+
+    # Step 4: Multiply each of the 4 limbs by d (one at a time)
+    #swap.4                    # [d, hi_hi, hi_lo, lo_hi, lo_lo]
+    #dup.1
+    #mul                    # lo_lo * d → p0_hi, p0_lo
+
+    #swap.3                    # bring lo_hi on top
+    #dup.4
+    #mul                    # lo_hi * d → p1_hi, p1_lo
+
+    #swap.4                    # bring hi_lo on top
+    #dup.6
+    #mul                    # hi_lo * d → p2_hi, p2_lo
+
+    #swap.5                    # bring hi_hi on top
+    #dup.8
+    #mul                    # hi_hi * d → p3_hi, p3_lo
+
+    # Now stack: [p3_hi, p3_lo, p2_hi, p2_lo, p1_hi, p1_lo, p0_hi, p0_lo]
+    # (top to bottom)
+
+    #exec.u128_normalize
+end
+
+
+proc.pow2_3
+  push.3
+  pow2
+end
+
+begin
+    push.1
+    push.2
+    push.3
+    push.4
+    exec.overflowing_mul debug.stack
+
+    exec.sys::truncate_stack
+end
+
+
